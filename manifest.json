@@ -1,0 +1,34 @@
+{
+    "manifest_version": 3,
+    "name": "LingoBuddy",
+    "version": "1.0",
+    "description": "Translate WhatsApp Web chats in real-time.",
+    "permissions": [
+      "tabs", 
+      "activeTab",
+      "scripting",
+      "storage",
+      "https://translate.googleapis.com/"
+    ],
+    "host_permissions": [
+      "https://web.whatsapp.com/*",
+      "https://translate.googleapis.com/*"
+    ],
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://web.whatsapp.com/*"],
+        "js": ["content.js"]
+      }
+    ],
+    "web_accessible_resources": [{
+      "resources": ["popup.html", "popup.js"],
+      "matches": ["<all_urls>"]
+  }],
+    "icons": {
+      "128": "lingobuddy.png"
+    }
+  }
+  
