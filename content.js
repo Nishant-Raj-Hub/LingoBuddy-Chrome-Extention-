@@ -26,38 +26,32 @@ async function translateText(text, targetLang) {
   }
 }
 
+
 // Function to translate all messages in the chat
 async function translateAllMessages(targetLang) {
-  const messageNodes = document.querySelectorAll(
-    "span.selectable-text.copyable-text"
-  );
-
-  // for (const node of messageNodes) {
-  //   const originalText = node.innerText;
-  //   const translatedText = await translateText(originalText, targetLang);
-  //   console.log(translatedText);
-
-  //   // Replace the original text with the translated text
-  //   node.innerText = translatedText;
-  // }
-
+  const messageNodes = document.querySelectorAll("span.selectable-text.copyable-text");
 
   for (const node of messageNodes) {
     const originalText = node.innerText;
-    const translatedText = await translateText(originalText, targetLang);
+
+    // Split the text by new lines and by full stops (and other punctuation)
+    const lines = originalText.split(/[\n.]+/).map(line => line.trim()).filter(line => line.length > 0);
+    const translatedLines = await Promise.all(lines.map(line => translateText(line, targetLang)));
 
     // Create a new span for the translated text
     const translatedSpan = document.createElement("span");
     translatedSpan.className = "translated-text"; // Optional: add a class for styling
-    translatedSpan.innerText = translatedText;
+    translatedSpan.innerText = translatedLines.join('\n'); // Join translated lines with line breaks
     translatedSpan.style.display = "block"; // Display the translated text on a new line
     translatedSpan.style.color = "#85929e"; // Optional: change the text color for better visibility
 
     // Insert the translated text below the original text
     node.parentNode.insertBefore(translatedSpan, node.nextSibling);
   }
-
 }
+
+
+
 
 // Listen for messages from the popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
