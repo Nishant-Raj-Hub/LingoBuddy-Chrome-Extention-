@@ -32,14 +32,31 @@ async function translateAllMessages(targetLang) {
     "span.selectable-text.copyable-text"
   );
 
+  // for (const node of messageNodes) {
+  //   const originalText = node.innerText;
+  //   const translatedText = await translateText(originalText, targetLang);
+  //   console.log(translatedText);
+
+  //   // Replace the original text with the translated text
+  //   node.innerText = translatedText;
+  // }
+
+
   for (const node of messageNodes) {
     const originalText = node.innerText;
     const translatedText = await translateText(originalText, targetLang);
-    console.log(translatedText);
 
-    // Replace the original text with the translated text
-    node.innerText = translatedText;
+    // Create a new span for the translated text
+    const translatedSpan = document.createElement("span");
+    translatedSpan.className = "translated-text"; // Optional: add a class for styling
+    translatedSpan.innerText = translatedText;
+    translatedSpan.style.display = "block"; // Display the translated text on a new line
+    translatedSpan.style.color = "#85929e"; // Optional: change the text color for better visibility
+
+    // Insert the translated text below the original text
+    node.parentNode.insertBefore(translatedSpan, node.nextSibling);
   }
+
 }
 
 // Listen for messages from the popup
